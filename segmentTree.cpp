@@ -23,21 +23,23 @@ class CSegmentTree
             m_Data[indexToUpdate] = value;
             propagateUpdate(indexToUpdate);
         }
-        _T query(size_t lower, size_t upper) // both bounds inclusive
+         _T query(size_t lower, size_t upper) // both bounds inclusive
         {
             lower += m_Size;
             upper += m_Size;
-            _T result = _T();
+            _T resultLower = _T(), resultUpper = _T();
             while(lower < upper)
             {
                 if(lower%2)
-                    result = m_Add(result, m_Data[lower++]);   
+                    resultLower = m_Add(resultLower, m_Data[lower++]);  
                 if(!(upper%2))
-                    result = m_Add(result, m_Data[upper--]);
+                    resultUpper = m_Add(m_Data[upper--], resultUpper);
                 lower /= 2;
                 upper /= 2;
             }
-            return m_Add(result, m_Data[lower]);
+            if(lower == upper)
+                resultLower = m_Add(resultLower, m_Data[lower]);
+            return m_Add(resultLower, resultUpper);
         }
     private:
         _ADD m_Add;
